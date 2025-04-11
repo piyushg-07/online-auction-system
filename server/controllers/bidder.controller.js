@@ -14,13 +14,22 @@ const handleBidderSignup = async (req, res) => {
         if (existingBidder) {
             return res.status(409).json({ error: "Bidder already exists" });
         }
+
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
+
         const newBidder = new Bidder({ name, email, password: hashedPassword });
         await newBidder.save();
-        const token = jwt.sign({ bidderId: newBidder._id, email: newBidder.email }, process.env.JWT_SECRET, { expiresIn: "14d" });
+
+        const token = jwt.sign(
+            { bidderId: newBidder._id, email: newBidder.email },
+            process.env.JWT_SECRET,
+            { expiresIn: "14d" }
+        );
+
         return res.status(201).json({ token });
     } catch (error) {
+        console.error("Signup error:", error.message); // Log the error
         res.status(500).json({ error: "Internal server error" });
     }
 };

@@ -168,8 +168,8 @@ const Landing = () => {
           <span className="ml-3 text-xl">Government Road Contracting System</span>
         </a>
         <nav className="md:ml-auto flex flex-wrap items-center text-base justify-center">
-          <a className="mr-5  border-2 p-2 rounded-lg hover:bg-indigo-600 hover:text-white">Government Officials</a>
-          <a className="mr-5  border-2 p-2 rounded-lg hover:bg-indigo-600 hover:text-white">Admin Panel</a>
+          <a className="mr-5  border-2 p-2 rounded-lg hover:bg-indigo-600 hover:text-white" href="/adminlogin">Government Officials</a>
+          <a className="mr-5  border-2 p-2 rounded-lg hover:bg-indigo-600 hover:text-white" href="/bidderlogin">Bidder Panel</a>
         </nav>
         <button className="inline-flex items-center bg-gray-200 border-0 py-1 px-3 focus:outline-none hover:bg-gray-300 rounded text-base mt-4 md:mt-0"><a href="/login">Login</a>
           <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 ml-1" viewBox="0 0 24 24">

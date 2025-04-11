@@ -14,6 +14,10 @@ import CreateAuction from "./components/CreateAuction.jsx";
 import MyAuction from "./pages/MyAuction.jsx";
 import Product from "./pages/Product.jsx";
 import Test from "./pages/Test.jsx";
+import AdminLogin from "./pages/admin/Login.jsx";
+import AdminSignup from "./pages/admin/Signup.jsx";
+import BidderLogin from "./pages/bidder/Login.jsx";
+import BidderSignup from "./pages/bidder/Signup.jsx";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +36,22 @@ const router = createBrowserRouter([
   {
     path: "/test",
     element: <Test />,
+  },
+  {
+    path: "/adminlogin",
+    element: <AdminLogin />,
+  },
+  {
+    path: "/adminSignup",
+    element: <AdminSignup />,
+  },
+  {
+    path: "/bidderlogin",
+    element: <BidderLogin />,
+  },
+  {
+    path: "/bidderSignup",
+    element: <BidderSignup />,
   },
   {
     path: "/",

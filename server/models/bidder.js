@@ -16,23 +16,23 @@ const bidderSchema = new mongoose.Schema({
     },
     phone: {
         type: String,
-        required: true,
+        required: false,
     },
     address: {
         type: String,
-        required: true,
+        required: false,
     },
     location: {
         type: String,
-        required: true,
+        required: false,
     },
     city: {
         type: String,
-        required: true,
+        required: false,
     },
     state: {
         type: String,
-        required: true,
+        required: false,
     },
     photo: {
         type: String, // Path to the photo

@@ -26,14 +26,16 @@ const Product = () => {
   };
 
   const handleBid = async (e) => {
+
     e.preventDefault();
     setLoadingAnimation(true);
     try {
-      if (bid <= auctionById.itemPrice) {
-        setErrorLine(`Enter bid greater than`);
-        setLoadingAnimation(false);
-        return;
-      }
+
+      // if (bid <= auctionById.itemPrice) {
+      //   setErrorLine(`Enter bid greater than`);
+      //   setLoadingAnimation(false);
+      //   return;
+      // }
       setErrorLine("");
 
       await axios.post(`${VITE_API}/api/auction/${productId}`, {
@@ -55,6 +57,8 @@ const Product = () => {
       dispatch(fetchAuctionById(productId));
     }
   }, [dispatch, productId]);
+  const field = localStorage.getItem("field"); // Retrieve the field value from localStorage
+
 
   if (loading)
     return (
@@ -90,20 +94,20 @@ const Product = () => {
             </p>
 
             <div className="mx-auto max-w-2xl space-y-2">
-              <p className="text-base font-semibold text-gray-900">Price:</p>
+              <p className="text-base font-semibold text-gray-900">Bidding Price:</p>
               <p className="text-base font-normal text-gray-500">
-                {auctionById.itemPrice || "Product Price"}
+                {auctionById.maxPrice || "Product Price"}
               </p>
 
               <p className="text-base font-semibold text-gray-900">
-                Auction Start Date:
+              Bidding Start Date:
               </p>
               <p className="text-base font-normal text-gray-500">
                 {auctionById.itemStartDate || "Start Date"}
               </p>
 
               <p className="text-base font-semibold text-gray-900">
-                Auction End Date:
+              Bidding End Date:
               </p>
               <p className="text-base font-normal text-gray-500">
                 {auctionById.itemEndDate || "End Date"}
@@ -203,6 +207,8 @@ const Product = () => {
             </ul> */}
           </div>
           <div className="mx-auto mb-6 max-w-3xl space-y-6 md:mb-12">
+                      {/* Conditionally render the bidding form */}
+          {field !== "admin" && (
             <form onSubmit={handleBid}>
               <label
                 htmlFor="helper-text"
@@ -236,7 +242,8 @@ const Product = () => {
                 </p>
               )}
             </form>
-            <p className="text-base font-semibold text-gray-900 ">
+             )}
+            <p className="text-base font-semibold text-gray-900  mt-10">
               Bidder History:
             </p>
 

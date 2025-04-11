@@ -7,6 +7,10 @@ const userSchema = new mongoose.Schema({
         trim: true,
         maxLength: 32
     },
+    field: {
+        type: String,
+        default:"admin"
+    },
     email: {
         type: String,
         required: true,

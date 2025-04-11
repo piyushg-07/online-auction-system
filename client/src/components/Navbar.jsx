@@ -13,10 +13,16 @@ const Navbar = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { user } = useSelector((state) => state.auth);
 
+  const field = localStorage.getItem("field");
+
   const navMenu = [
     { title: "Home", url: "/auction" },
-    { title: "My Auction", url: `/auction/user/${user.userId}` },
-    { title: "Create Auction", url: "/create-auction" },
+    ...(field !== "bidder"
+      ? [
+          { title: "My Auction", url: `/auction/user/${user.userId}` },
+          { title: "Create Auction", url: "/create-auction" },
+        ]
+      : []), // Removed the trailing comma here
     { title: "Accounts", url: "#" },
   ];
 
@@ -73,7 +79,7 @@ const Navbar = () => {
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
           <span className="self-center text-2xl font-semibold whitespace-nowrap ">
-            Kipa Auction
+            Government Road Contracting System
           </span>
         </Link>
         <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">

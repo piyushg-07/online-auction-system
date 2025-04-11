@@ -36,6 +36,7 @@ const Login = () => {
       });
 
       const data = await response.json();
+      console.log(data)
 
       if (!response.ok) {
         setError(data.error || "Login failed. Please try again.");
@@ -45,6 +46,7 @@ const Login = () => {
 
       // Save token to localStorage
       localStorage.setItem("token", data.token);
+      localStorage.setItem("field", data.bidder.field);
 
       // Navigate to the dashboard or auction page
       navigate("/auction");

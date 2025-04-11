@@ -39,7 +39,7 @@ const handleAdminLogin = async (req, res) => {
             return res.status(400).json({ error: "Invalid credentials" });
         }
         const token = jwt.sign({ adminId: admin._id, email: admin.email }, process.env.JWT_SECRET, { expiresIn: '14d' });
-        return res.status(200).json({ token });
+        return res.status(200).json({ token, admin });
     } catch (error) {
         res.status(500).json({ error: "Internal server error" });
     }

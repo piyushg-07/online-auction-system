@@ -5,6 +5,10 @@ const adminSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    field: {
+        type: String,
+        default:"government official"
+    },
     email: {
         type: String,
         required: true,

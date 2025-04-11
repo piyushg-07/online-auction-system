@@ -30,6 +30,7 @@ const CreateAuction = () => {
   }, [formData]);
 
   const handleSubmit = async (event) => {
+    console.log("ediuxxxxxxxxxxxxxxxxxxxxxxchgeuyfuyr")
     event.preventDefault();
 
     try {

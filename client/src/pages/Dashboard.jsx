@@ -33,18 +33,18 @@ const Dashboard = () => {
       {auctions && auctions.length > 0 ? (
         auctions.map((auction) => (
           <Card
-            key={auction._id}
-            auction_id={auction._id}
-            item_id={auction.seller._id}
-            itemName={auction.itemName}
-            itemDescription={auction.itemDescription}
-            itemPrice={auction.itemPrice}
-            itemPostDate={auction.createdAt}
-            itemStartDate={auction.itemStartDate}
-            itemEndDate={auction.itemEndDate}
-            itemPhoto={auction.itemPhoto}
-            sellerName={auction.seller.name}
-          />
+            key={auction?._id}
+            auction_id={auction?._id}
+            item_id={auction.seller?._id}
+            itemName={auction?.itemName}
+            itemDescription={auction?.itemDescription}
+            itemPrice={auction?.itemPrice}
+            itemPostDate={auction?.createdAt}
+            itemStartDate={auction?.itemStartDate}
+            itemEndDate={auction?.itemEndDate}
+            itemPhoto={auction?.itemPhoto}
+            sellerName={auction?.seller?.name || "Unknown Seller"} // Fallback for null seller
+            />
         ))
       ) : (
         <div className="flex flex-col items-center justify-center py-8 px-4 text-center bg-gray-100  rounded-lg shadow-md my-2 max-w-md max-md:mx-auto">

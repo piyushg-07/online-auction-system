@@ -38,7 +38,7 @@ const handleLogin = async (req, res) => {
             return res.status(400).json({ error: "Invalid credentials" });
         }
         const token = jwt.sign({ userId: user._id, name: user.name, email: user.email }, process.env.JWT_SECRET, { expiresIn: '14d' });
-        return res.status(201).json({ token });
+        return res.status(201).json({ token, user });
     } catch (error) {
         res.status(500).json({ error: "Internal server error" });
     }

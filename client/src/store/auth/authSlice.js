@@ -24,6 +24,7 @@ export const login = createAsyncThunk('auth/login', async ({ email, password }, 
         const response = await axios.post(`${VITE_API}/api/login`, { email, password });
         const { token } = response.data;
         localStorage.setItem('token', token);
+        localStorage.setItem("field", response.data.user.field);
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         const decoded = jwtDecode(token);
         return decoded;

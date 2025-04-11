@@ -19,6 +19,7 @@ const createAuction = async (req, res) => {
         const newAuction = new Product({
             itemName,
             itemPrice,
+            maxPrice: itemPrice,
             itemDescription,
             itemCategory,
             itemPhoto: imageUrl,
@@ -87,9 +88,7 @@ const updateAuctionById = async (req, res) => {
         if (auction.itemEndDate < Date.now()) {
             return res.status(400).json({ message: 'Auction has ended' });
         }
-        if (auction.itemPrice >= bid) {
-            return res.status(400).json({ message: 'Bid must be greater than current price' });
-        }
+
         auction.itemPrice = bid;
         auction.bids.push({ bidder, bid, time: Date.now() });
         await auction.save();

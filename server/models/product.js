@@ -13,6 +13,10 @@ const productSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    maxPrice: {
+        type: Number,
+        default: 0
+    },
     itemCategory: {
         type: String,
         required: true,

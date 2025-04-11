@@ -5,6 +5,10 @@ const bidderSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    field: {
+        type: String,
+        default:"bidder"
+    },
     email: {
         type: String,
         required: true,

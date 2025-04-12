@@ -28,5 +28,5 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/bidder", bidderRoutes);
 
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(`Server is running on http://localhost:${port}`);
 });

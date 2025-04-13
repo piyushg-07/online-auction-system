@@ -47,6 +47,8 @@ const Signup = () => {
 
       // Save token to localStorage
       localStorage.setItem("token", data.token);
+      localStorage.setItem("bidderId", data.bidder._id); // Save bidderId
+
 
       // Navigate to the dashboard or auction page
       navigate("/auction");

@@ -17,10 +17,14 @@ const Navbar = () => {
 
   const navMenu = [
     { title: "Home", url: "/auction" },
+    ...(field === "bidder"
+      ? [{ title: "Proposal", url: "/proposal" }]
+      : []), // Only include "Proposal" if the field 
     ...(field !== "bidder"
       ? [
           { title: "My Auction", url: `/auction/user/${user.userId}` },
           { title: "Create Auction", url: "/create-auction" },
+          { title: "All Proposals", url: "/allProposals" },
         ]
       : []), // Removed the trailing comma here
     { title: "Accounts", url: "#" },

@@ -1,22 +1,17 @@
 @echo off
 REM =====================================
 REM Change these paths to match your project structure.
+REM Path to the virtual environment (venv) for your Flask app.
 set VENV_PATH=C:\Users\user\OneDrive\Desktop\test\working\online-auction-system\QuotationAnalysis\venv
+REM Path to the Flask app folder (where app.py is located)
 set FLASK_APP_DIR=C:\Users\user\OneDrive\Desktop\test\working\online-auction-system\QuotationAnalysis
+REM Path to the React app folder (where package.json is located)
 set REACT_APP_DIR=C:\Users\user\OneDrive\Desktop\test\working\online-auction-system\client
+REM Path to the Node.js server folder (where server.js or app.js is located)
 set NODE_APP_DIR=C:\Users\user\OneDrive\Desktop\test\working\online-auction-system\server
 REM =====================================
 
-REM ---------- Function to check and create venv ----------
-IF NOT EXIST "%VENV_PATH%\Scripts\activate.bat" (
-    echo Virtual environment not found. Creating venv...
-    cd /d %FLASK_APP_DIR%
-    python -m venv venv
-    echo Installing Flask requirements...
-    call %VENV_PATH%\Scripts\activate && pip install -r requirements.txt
-)
-
-REM ---------- Flask App ----------
+REM ----- Flask App Prompt -----
 echo Do you want to run the Flask App? (Y/N)
 set /p flaskChoice="Enter Y for Yes or N for No: [Y,N]? "
 if /I "%flaskChoice%"=="Y" (
@@ -26,32 +21,22 @@ if /I "%flaskChoice%"=="Y" (
     echo Skipping Flask App.
 )
 
-REM ---------- React App ----------
+REM ----- React App Prompt -----
 echo.
 echo Do you want to run the React App? (Y/N)
 set /p reactChoice="Enter Y for Yes or N for No: [Y,N]? "
 if /I "%reactChoice%"=="Y" (
-    IF NOT EXIST "%REACT_APP_DIR%\node_modules" (
-        echo node_modules not found in React app. Installing...
-        cd /d %REACT_APP_DIR%
-        npm install
-    )
     echo Starting React app...
     start "React App" cmd /k "cd /d %REACT_APP_DIR% && npm run dev"
 ) else (
     echo Skipping React App.
 )
 
-REM ---------- Node.js Server ----------
+REM ----- Node.js Server Prompt -----
 echo.
 echo Do you want to run the Node.js Server? (Y/N)
 set /p nodeChoice="Enter Y for Yes or N for No: [Y,N]? "
 if /I "%nodeChoice%"=="Y" (
-    IF NOT EXIST "%NODE_APP_DIR%\node_modules" (
-        echo node_modules not found in Node.js server. Installing...
-        cd /d %NODE_APP_DIR%
-        npm install
-    )
     echo Starting Node.js server...
     start "Node App" cmd /k "cd /d %NODE_APP_DIR% && npm start"
 ) else (

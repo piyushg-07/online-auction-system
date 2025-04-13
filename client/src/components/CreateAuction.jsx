@@ -162,10 +162,9 @@ const CreateAuction = () => {
               }
             >
               <option value="">Select a category</option>
-              <option value="realestate">Real Estate</option>
-              <option value="electronics">Electronic</option>
-              <option value="education">Education</option>
-              <option value="food">Food</option>
+              <option value="Urban Roads">Urban Roads</option>
+              <option value="Village Roads">Village Roads</option>
+              <option value="Industrial Roads">Industrial Roads</option>
             </select>
           </div>
           {/* Item Image */}

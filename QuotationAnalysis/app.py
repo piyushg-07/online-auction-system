@@ -2,13 +2,20 @@ import os
 import numpy as np
 import pandas as pd
 from flask import Flask, request, jsonify
+from flask import send_from_directory
 import PyPDF2
 import joblib
+from pymongo import MongoClient
+from bson import ObjectId
+from flask_cors import CORS  # Import CORS
+
 
 # Configuration
 UPLOAD_FOLDER = 'uploads'
 MODEL_PATH = 'model_from_pdf.pkl'
 ALLOWED_EXTENSIONS = {'pdf'}
+DB_NAME = 'MajorProject'
+COLLECTION_NAME = 'proposals'
 
 # List of feature names; must match training script exactly.
 FEATURES = [
@@ -19,9 +26,15 @@ FEATURES = [
 ]
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 app.secret_key = "super_secret_key_123!"  # Use a secure random key in production.
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# MongoDB connection
+client = MongoClient('mongodb://localhost:27017/')
+db = client[DB_NAME]
+proposals_collection = db[COLLECTION_NAME]
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -74,12 +87,7 @@ def load_pdf_features(pdf_path):
 
 def generate_explanation(features):
     """
-    Generate a rule-based explanation using the feasibility criteria:
-      - Proposal cost is acceptable if it is less than 5,500,000 rupees.
-      - Road length is appropriate if it is strictly greater than 10 km and strictly less than 20 km.
-      - Material quality must be greater than 5.
-      - Past performance must be greater than 0.5.
-      - Construction complexity must be less than 8.
+    Generate a rule-based explanation using the feasibility criteria.
     """
     reasons = []
     
@@ -138,14 +146,65 @@ def predict():
         prediction_value = model.predict(features_df)[0]
         result = "Feasible" if prediction_value == 1 else "Not Feasible"
         explanation = generate_explanation(features_extracted)
-        return jsonify({
+
+        # Save the proposal to the database
+        proposal_data = {
             "filename": file.filename,
             "prediction": result,
             "explanation": explanation,
-            "features": features_extracted
-        })
+            "features": features_extracted,
+            "user_id": request.form.get("user_id", "unknown"),  # Add user ID if available
+        }
+        inserted_id = proposals_collection.insert_one(proposal_data).inserted_id
+
+        # Add the inserted ID as a string to the response
+        proposal_data["_id"] = str(inserted_id)
+
+        return jsonify(proposal_data)
     else:
         return jsonify({"error": "Allowed file type is PDF."}), 400
+
+@app.route('/proposals', methods=['GET'])
+def get_proposals():
+    """Get all proposals for a specific user."""
+    user_id = request.args.get("user_id")
+    if not user_id:
+        print("No user_id provided in the request.")  # Debugging log
+        return jsonify({"error": "User ID is required."}), 400
+
+    try:
+        print(f"Fetching proposals for user_id: {user_id}")  # Debugging log
+
+        # Check if the user_id exists in the database
+        user_exists = proposals_collection.find_one({"user_id": user_id})
+        if not user_exists:
+            print(f"No proposals found for user_id: {user_id}")  # Debugging log
+            return jsonify({"error": "No proposals found for this user."}), 404
+
+        # Fetch all proposals for the user_id
+        proposals = list(proposals_collection.find({"user_id": user_id}))
+        for proposal in proposals:
+            # Convert ObjectId to string and include the filename
+            proposal["_id"] = str(proposal["_id"])
+            proposal["file_url"] = f"http://127.0.0.1:5000/uploads/{proposal['filename']}"
+
+        print(f"Proposals fetched: {proposals}")  # Debugging log
+        return jsonify(proposals)
+    except Exception as e:
+        print(f"Error fetching proposals: {e}")  # Debugging log
+        return jsonify({"error": "Internal server error"}), 500
+    
+    
+@app.route('/uploads/<filename>', methods=['GET'])
+def serve_file(filename):
+    """Serve a file from the uploads folder."""
+    try:
+        print(f"Serving file: {filename}")  # Debugging log
+        return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    except Exception as e:
+        print(f"Error serving file {filename}: {e}")  # Debugging log
+        return jsonify({"error": "File not found"}), 404
+    
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -5,7 +5,7 @@ const Footer = () => {
     <footer className="bg-white border-t border-gray-200">
       <div className="container flex flex-col items-center justify-between px-6 py-6 mx-auto lg:flex-row">
         <span className="md:text-xl max-lg:hidden font-semibold text-blue-600 underline font-serif">
-          Kipa Auction
+          Government Road Contracting System
         </span>
 
         <div className="flex flex-wrap items-center justify-center gap-4 mt-6 lg:gap-6 lg:mt-0">
@@ -46,7 +46,7 @@ const Footer = () => {
         </div>
 
         <p className="mt-6 text-sm text-gray-500 lg:mt-0">
-          © Copyright 2024 Kipa Auction.
+          © Copyright 2025 Government Road Contracting System
         </p>
       </div>
     </footer>

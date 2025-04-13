@@ -14,10 +14,14 @@ import CreateAuction from "./components/CreateAuction.jsx";
 import MyAuction from "./pages/MyAuction.jsx";
 import Product from "./pages/Product.jsx";
 import Test from "./pages/Test.jsx";
-import AdminLogin from "./pages/admin/Login.jsx";
-import AdminSignup from "./pages/admin/Signup.jsx";
+import AdminLogin from "./pages/GovernmentOfficial/Login.jsx";
+import AdminSignup from "./pages/GovernmentOfficial/Signup.jsx";
 import BidderLogin from "./pages/bidder/Login.jsx";
 import BidderSignup from "./pages/bidder/Signup.jsx";
+import ProposalBidder from "./pages/bidder/Proposal.jsx";
+import AllProposal from "./pages/AllProposal.jsx";
+
+const bidderId = localStorage.getItem("bidderId"); // Retrieve bidderId from localStorage
 
 const router = createBrowserRouter([
   {
@@ -52,6 +56,14 @@ const router = createBrowserRouter([
   {
     path: "/bidderSignup",
     element: <BidderSignup />,
+  },
+  {
+    path: "/proposal", // Use bidderId in the route path
+    element: <ProposalBidder />,
+  },
+  {
+    path: "/allProposals", 
+    element: <AllProposal />,
   },
   {
     path: "/",

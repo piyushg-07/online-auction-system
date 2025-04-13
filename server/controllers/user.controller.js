@@ -3,7 +3,9 @@ import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import Product from "../models/product.js";
-import mongoose from "mongoose";
+import Bidder from "../models/bidder.js";
+import Proposal from "../models/proposal.js"; // Import the Proposal model
+
 
 dotenv.config().parsed;
 
@@ -94,4 +96,42 @@ const handleUser = async (req, res) => {
 }
 
 
-export { handleSignup, handleLogin, handleDelete, handleGetUser, handleUser };
+const UsersWithProposals = async (req, res) => {
+    try {
+        console.log("Fetching all users..."); // Debugging log
+        const users = await Bidder.find({}, { password: 0 }); // Exclude password for security
+        if (!users || users.length === 0) {
+            console.log("No users found."); // Debugging log
+            return res.status(404).json({ error: "No users found." });
+        }
+        console.log("Users fetched:", users);
+
+        console.log("Fetching all proposals..."); // Debugging log
+        const proposals = await Proposal.find({});
+        if (!proposals || proposals.length === 0) {
+            console.log("No proposals found."); // Debugging log
+        } else {
+            console.log("Proposals fetched:", proposals);
+        }
+
+        // Map proposals to their respective users
+        const usersWithProposals = users.map((user) => {
+            const userProposals = proposals.filter(
+                (proposal) => proposal.user_id.toString() === user._id.toString()
+            );
+            return {
+                ...user.toObject(),
+                proposals: userProposals,
+            };
+        });
+
+        console.log("Users with proposals mapped successfully."); // Debugging log
+        return res.status(200).json({ users: usersWithProposals });
+    } catch (error) {
+        console.log("Error fetching users and proposals:", error); // Debugging log
+        return res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+
+export { handleSignup, handleLogin, handleDelete, handleGetUser, handleUser, UsersWithProposals };

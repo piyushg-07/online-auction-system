@@ -6,7 +6,7 @@ set FLASK_APP_DIR=C:\Users\user\OneDrive\Desktop\test\working\online-auction-sys
 set REACT_APP_DIR=C:\Users\user\OneDrive\Desktop\test\working\online-auction-system\client
 set NODE_APP_DIR=C:\Users\user\OneDrive\Desktop\test\working\online-auction-system\server
 REM =====================================
-
+C:\Users\user\OneDrive\Desktop\test\working\online-auction-system\client
 REM ---------- Function to check and create venv ----------
 IF NOT EXIST "%VENV_PATH%\Scripts\activate.bat" (
     echo Virtual environment not found. Creating venv...

@@ -5,54 +5,54 @@ set VENV_PATH=C:\Users\user\OneDrive\Desktop\test\working\online-auction-system\
 set FLASK_APP_DIR=C:\Users\user\OneDrive\Desktop\test\working\online-auction-system\QuotationAnalysis
 set REACT_APP_DIR=C:\Users\user\OneDrive\Desktop\test\working\online-auction-system\client
 set NODE_APP_DIR=C:\Users\user\OneDrive\Desktop\test\working\online-auction-system\server
-set max_retry=3
 REM =====================================
 
-REM ---------- Check if winget is installed ----------
-where winget >nul 2>&1
+REM ---------- Check for Chocolatey and install if missing ----------
+where choco >nul 2>&1
 if errorlevel 1 (
-    echo winget is not available on this system.
-    echo Please install the Windows Package Manager (winget) from the Microsoft Store or update Windows.
-    pause
-    exit /b
+    echo Chocolatey is not installed.
+    echo Installing Chocolatey...
+    REM Install Chocolatey using PowerShell
+    @powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))"
+    REM Check if installation succeeded
+    where choco >nul 2>&1
+    if errorlevel 1 (
+        echo Chocolatey installation failed. Please install Chocolatey manually from https://chocolatey.org/install.
+        pause
+        exit /b
+    ) else (
+        echo Chocolatey installed successfully.
+    )
 ) else (
-    echo winget is installed.
+    echo Chocolatey is already installed.
 )
 
 REM ---------- Check if Python is installed ----------
-set retry=0
-:check_python_winget
 where python >nul 2>&1
 if errorlevel 1 (
-    if %retry% GEQ %max_retry% (
-        echo Failed to install Python after %max_retry% attempts. Please install Python manually.
+    echo Python is not installed.
+    echo Installing Python via Chocolatey...
+    choco install python3 -y
+    if errorlevel 1 (
+        echo Python installation failed. Please install Python manually.
         pause
         exit /b
     )
-    echo Python is not installed. Installing Python via winget... (Attempt %retry% of %max_retry%)
-    winget install --id=Python.Python.3 -e --silent
-    set /a retry+=1
-    timeout /t 5 /nobreak >nul
-    goto check_python_winget
 ) else (
     echo Python is installed.
 )
 
 REM ---------- Check if Node.js is installed ----------
-set retry=0
-:check_node_winget
 where node >nul 2>&1
 if errorlevel 1 (
-    if %retry% GEQ %max_retry% (
-        echo Failed to install Node.js after %max_retry% attempts. Please install Node.js manually.
+    echo Node.js is not installed.
+    echo Installing Node.js via Chocolatey...
+    choco install nodejs -y
+    if errorlevel 1 (
+        echo Node.js installation failed. Please install Node.js manually.
         pause
         exit /b
     )
-    echo Node.js is not installed. Installing Node.js via winget... (Attempt %retry% of %max_retry%)
-    winget install --id=OpenJS.Nodejs -e --silent
-    set /a retry+=1
-    timeout /t 5 /nobreak >nul
-    goto check_node_winget
 ) else (
     echo Node.js is installed.
 )

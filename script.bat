@@ -8,26 +8,6 @@ set NODE_APP_DIR=C:\Users\user\OneDrive\Desktop\test\working\online-auction-syst
 set max_retry=3
 REM =====================================
 
-REM ---------- Check for Chocolatey and install if missing using 'where' ----------
-where choco >nul 2>&1
-if errorlevel 1 (
-    set retry=0
-    :install_choco
-    if %retry% GEQ %max_retry% (
-        echo Failed to install Chocolatey after %max_retry% attempts. Please install it manually from https://chocolatey.org/install.
-        pause
-        exit /b
-    )
-    echo Chocolatey is not installed. Installing Chocolatey... (Attempt %retry% of %max_retry%)
-    REM Using '< NUL' to bypass any keypress prompts in the installation process.
-    @powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" < NUL
-    set /a retry+=1
-    timeout /t 5 /nobreak >nul
-    where choco >nul 2>&1
-    if errorlevel 1 goto install_choco
-) else (
-    echo Chocolatey is installed.
-)
 
 REM ---------- Check if Python is installed ----------
 set retry=0

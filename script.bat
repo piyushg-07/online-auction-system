@@ -8,22 +8,23 @@ set NODE_APP_DIR=C:\Users\user\OneDrive\Desktop\test\working\online-auction-syst
 set max_retry=3
 REM =====================================
 
-REM ---------- Check for Chocolatey by verifying installation folder ----------
-set retry=0
-:check_choco
-if not exist "C:\ProgramData\chocolatey" (
-    if %retry% geq %max_retry% (
+REM ---------- Check for Chocolatey and install if missing using 'where' ----------
+where choco >nul 2>&1
+if errorlevel 1 (
+    set retry=0
+    :install_choco
+    if %retry% GEQ %max_retry% (
         echo Failed to install Chocolatey after %max_retry% attempts. Please install it manually from https://chocolatey.org/install.
         pause
         exit /b
     )
     echo Chocolatey is not installed. Installing Chocolatey... (Attempt %retry% of %max_retry%)
-    REM Using < NUL to bypass any "press any key" prompts.
+    REM Using '< NUL' to bypass any keypress prompts in the installation process.
     @powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" < NUL
     set /a retry+=1
-    REM Pause briefly to allow installation to complete
     timeout /t 5 /nobreak >nul
-    goto check_choco
+    where choco >nul 2>&1
+    if errorlevel 1 goto install_choco
 ) else (
     echo Chocolatey is installed.
 )
@@ -33,7 +34,7 @@ set retry=0
 :check_python
 where python >nul 2>&1
 if errorlevel 1 (
-    if %retry% geq %max_retry% (
+    if %retry% GEQ %max_retry% (
         echo Failed to install Python after %max_retry% attempts. Please install Python manually.
         pause
         exit /b
@@ -41,7 +42,6 @@ if errorlevel 1 (
     echo Python is not installed. Installing Python via Chocolatey... (Attempt %retry% of %max_retry%)
     choco install python3 -y
     set /a retry+=1
-    REM Wait a few seconds before re-checking installation
     timeout /t 3 /nobreak >nul
     goto check_python
 ) else (
@@ -53,7 +53,7 @@ set retry=0
 :check_node
 where node >nul 2>&1
 if errorlevel 1 (
-    if %retry% geq %max_retry% (
+    if %retry% GEQ %max_retry% (
         echo Failed to install Node.js after %max_retry% attempts. Please install Node.js manually.
         pause
         exit /b

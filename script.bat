@@ -8,20 +8,21 @@ set NODE_APP_DIR=C:\Users\user\OneDrive\Desktop\test\working\online-auction-syst
 set max_retry=3
 REM =====================================
 
-REM ---------- Check for Chocolatey and install if missing ----------
+REM ---------- Check for Chocolatey by verifying installation folder ----------
 set retry=0
 :check_choco
-where choco >nul 2>&1
-if errorlevel 1 (
+if not exist "C:\ProgramData\chocolatey" (
     if %retry% geq %max_retry% (
         echo Failed to install Chocolatey after %max_retry% attempts. Please install it manually from https://chocolatey.org/install.
         pause
         exit /b
     )
     echo Chocolatey is not installed. Installing Chocolatey... (Attempt %retry% of %max_retry%)
-    REM The redirection of < NUL attempts to bypass the "press any key" prompt
+    REM Using < NUL to bypass any "press any key" prompts.
     @powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" < NUL
     set /a retry+=1
+    REM Pause briefly to allow installation to complete
+    timeout /t 5 /nobreak >nul
     goto check_choco
 ) else (
     echo Chocolatey is installed.
@@ -40,6 +41,8 @@ if errorlevel 1 (
     echo Python is not installed. Installing Python via Chocolatey... (Attempt %retry% of %max_retry%)
     choco install python3 -y
     set /a retry+=1
+    REM Wait a few seconds before re-checking installation
+    timeout /t 3 /nobreak >nul
     goto check_python
 ) else (
     echo Python is installed.
@@ -58,6 +61,7 @@ if errorlevel 1 (
     echo Node.js is not installed. Installing Node.js via Chocolatey... (Attempt %retry% of %max_retry%)
     choco install nodejs -y
     set /a retry+=1
+    timeout /t 3 /nobreak >nul
     goto check_node
 ) else (
     echo Node.js is installed.
@@ -94,4 +98,27 @@ if /I "%reactChoice%"=="Y" (
         npm install
     )
     echo Starting React app...
-    start "React App" cmd /k "cd /d %REACT_APP_DIR
+    start "React App" cmd /k "cd /d %REACT_APP_DIR% && npm run dev"
+) else (
+    echo Skipping React App.
+)
+
+REM ---------- Node.js Server ----------
+echo.
+echo Do you want to run the Node.js Server? (Y/N)
+set /p nodeChoice="Enter Y for Yes or N for No: [Y,N]? "
+if /I "%nodeChoice%"=="Y" (
+    IF NOT EXIST "%NODE_APP_DIR%\node_modules" (
+        echo node_modules not found in Node.js server. Installing...
+        cd /d %NODE_APP_DIR%
+        npm install
+    )
+    echo Starting Node.js server...
+    start "Node App" cmd /k "cd /d %NODE_APP_DIR% && npm start"
+) else (
+    echo Skipping Node.js Server.
+)
+
+echo.
+echo All selections completed.
+pause

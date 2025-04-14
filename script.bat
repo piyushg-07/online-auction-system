@@ -8,10 +8,20 @@ set NODE_APP_DIR=C:\Users\user\OneDrive\Desktop\test\working\online-auction-syst
 set max_retry=3
 REM =====================================
 
+REM ---------- Check if winget is installed ----------
+where winget >nul 2>&1
+if errorlevel 1 (
+    echo winget is not available on this system.
+    echo Please install the Windows Package Manager (winget) from the Microsoft Store or update Windows.
+    pause
+    exit /b
+) else (
+    echo winget is installed.
+)
 
 REM ---------- Check if Python is installed ----------
 set retry=0
-:check_python
+:check_python_winget
 where python >nul 2>&1
 if errorlevel 1 (
     if %retry% GEQ %max_retry% (
@@ -19,18 +29,18 @@ if errorlevel 1 (
         pause
         exit /b
     )
-    echo Python is not installed. Installing Python via Chocolatey... (Attempt %retry% of %max_retry%)
-    choco install python3 -y
+    echo Python is not installed. Installing Python via winget... (Attempt %retry% of %max_retry%)
+    winget install --id=Python.Python.3 -e --silent
     set /a retry+=1
-    timeout /t 3 /nobreak >nul
-    goto check_python
+    timeout /t 5 /nobreak >nul
+    goto check_python_winget
 ) else (
     echo Python is installed.
 )
 
 REM ---------- Check if Node.js is installed ----------
 set retry=0
-:check_node
+:check_node_winget
 where node >nul 2>&1
 if errorlevel 1 (
     if %retry% GEQ %max_retry% (
@@ -38,11 +48,11 @@ if errorlevel 1 (
         pause
         exit /b
     )
-    echo Node.js is not installed. Installing Node.js via Chocolatey... (Attempt %retry% of %max_retry%)
-    choco install nodejs -y
+    echo Node.js is not installed. Installing Node.js via winget... (Attempt %retry% of %max_retry%)
+    winget install --id=OpenJS.Nodejs -e --silent
     set /a retry+=1
-    timeout /t 3 /nobreak >nul
-    goto check_node
+    timeout /t 5 /nobreak >nul
+    goto check_node_winget
 ) else (
     echo Node.js is installed.
 )

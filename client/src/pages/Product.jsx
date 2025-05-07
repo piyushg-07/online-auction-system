@@ -18,6 +18,7 @@ const Product = () => {
     (state) => state.auctions
   );
   const { user } = useSelector((state) => state.auth);
+  const name = localStorage.getItem("name")
 
   const [isDisabled, setIsDisabled] = useState(false);
 
@@ -81,7 +82,7 @@ const Product = () => {
           </div>
           <div className="mx-auto max-w-2xl space-y-2">
             <p className="text-base font-semibold text-gray-900">
-              Product Description:
+              Project Description:
             </p>
             <p className="text-base font-normal text-gray-500 ">
               {auctionById.itemDescription || "Product Description"}
@@ -180,7 +181,7 @@ const Product = () => {
                     {auctionById.bids.map((bid, index) => (
                       <tr className="bg-white border-b" key={index}>
                         <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                          {bid.bidder.name}
+                        {bid.bidder?.name || name}
                         </td>
                         <td className="px-6 py-4">{bid.bid}</td>
                         <td className="px-6 py-4">{bid.time.slice(0, 10)}</td>

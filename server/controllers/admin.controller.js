@@ -1,5 +1,7 @@
 import Admin from "../models/admin.js";
 import User from "../models/user.js";
+import Bidder from "../models/bidder.js";
+import Proposal from "../models/proposal.js";
 import Product from "../models/product.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -55,6 +57,45 @@ const getAllUsers = async (req, res) => {
     }
 };
 
+
+
+// Get all products
+const getAllBiddersWithProposals = async (req, res) => {
+    try {
+        // 1. Get all bidders (excluding password) as plain JS objects
+        const bidders = await Bidder.find({}, { password: 0 }).lean();
+
+        // 2. Get all proposals and populate user info (bidder name & email)
+        const proposals = await Proposal.find({})
+            .populate('user_id', 'name email') // optional: brings bidder name/email into each proposal
+            .lean();
+
+        // 3. Group proposals by user_id (string)
+        const proposalMap = proposals.reduce((acc, proposal) => {
+            const userId = proposal.user_id?._id?.toString();
+            if (userId) {
+                if (!acc[userId]) acc[userId] = [];
+                acc[userId].push(proposal);
+            }
+            return acc;
+        }, {});
+
+        // 4. Attach proposals to each bidder
+        const result = bidders.map(bidder => ({
+            ...bidder,
+            proposals: proposalMap[bidder._id.toString()] || []
+        }));
+
+        // 5. Send response
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error fetching bidders with proposals:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+
+
 // Get all products
 const getAllProducts = async (req, res) => {
     try {
@@ -64,6 +105,7 @@ const getAllProducts = async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 };
+
 
 // Delete a user and their associated products
 const deleteUserAndProducts = async (req, res) => {
@@ -143,4 +185,4 @@ const createProduct = async (req, res) => {
     }
 };
 
-export {handleAdminSignup, handleAdminLogin, getAllUsers, getAllProducts, deleteUserAndProducts, deleteProduct,createProduct };
+export {handleAdminSignup, handleAdminLogin, getAllUsers, getAllProducts, deleteUserAndProducts, deleteProduct,createProduct,getAllBiddersWithProposals };

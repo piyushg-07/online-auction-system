@@ -20,13 +20,20 @@ const Navbar = () => {
     ...(field === "bidder"
       ? [{ title: "Proposal", url: "/proposal" }]
       : []), // Only include "Proposal" if the field 
-    ...(field !== "bidder"
+      ...((field !== "bidder" || !field)
       ? [
           { title: "My Auction", url: `/auction/user/${user.userId}` },
           { title: "Create Auction", url: "/create-auction" },
           { title: "All Proposals", url: "/allProposals" },
         ]
-      : []), // Removed the trailing comma here
+      : []),  
+      ...(field === "GovernmentOfficial"
+        ? [
+            { title: "All Registers", url: `/AdminAndBidderDashboard` },
+            { title: "Management", url: "/Management" },
+            
+          ]
+        : []),  
     { title: "Accounts", url: "#" },
   ];
 
@@ -49,8 +56,9 @@ const Navbar = () => {
 
   // User logout
   const handleLogout = () => {
+    localStorage.clear()
     dispatch(logout());
-    navigate("/");
+    navigate("/home");
   };
 
   // Delete user account

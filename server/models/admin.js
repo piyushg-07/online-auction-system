@@ -7,7 +7,7 @@ const adminSchema = new mongoose.Schema({
     },
     field: {
         type: String,
-        default:"government official"
+        default:"GovernmentOfficial"
     },
     email: {
         type: String,

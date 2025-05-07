@@ -2,15 +2,12 @@ import { FiHome } from "react-icons/fi";
 import { IoArrowBackSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { TbUserSquareRounded } from "react-icons/tb";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
-  const { user, errorData } = useSelector((state) => state.auth);
-  const [error, setError] = useState(errorData);
+  const [error, setError] = useState();
 
   const [formData, setformData] = useState({
     name: "",
@@ -39,7 +36,7 @@ const Signup = () => {
 
       const data = await response.json();
 
-      if (!response.ok) {
+      if (!response.ok && !data.token) {
         setError(data.error || "Signup failed. Please try again.");
         setLoading(false);
         return;
@@ -51,7 +48,7 @@ const Signup = () => {
 
 
       // Navigate to the dashboard or auction page
-      navigate("/auction");
+        navigate("/bidderlogin");
     } catch (error) {
       console.error("Signup error:", error);
       setError("An unexpected error occurred. Please try again.");
@@ -60,11 +57,12 @@ const Signup = () => {
     }
   }
 
+  const token = localStorage.getItem("token");
   useEffect(() => {
-    if (user) {
-      navigate("/auction");
+    if (token) {
+      navigate("/bidderlogin");
     }
-  }, [user, navigate]);
+  }, [navigate]);
 
   return (
     <section className="py-4 md:py-8">

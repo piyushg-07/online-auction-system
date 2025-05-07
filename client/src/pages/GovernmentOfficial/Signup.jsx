@@ -38,6 +38,7 @@ const Signup = () => {
       });
 
       const data = await response.json();
+      console.log(data)
 
       if (!response.ok) {
         setError(data.error || "Signup failed. Please try again.");
@@ -47,6 +48,9 @@ const Signup = () => {
 
       // Save token to localStorage
       localStorage.setItem("token", data.token);
+      localStorage.setItem("name", data.admin.name);
+      localStorage.setItem("field", data.admin.field);
+      localStorage.setItem("GovId", data.admin._id); // Save bidderId
 
       // Navigate to the dashboard or auction page
       navigate("/auction");
@@ -59,10 +63,11 @@ const Signup = () => {
   }
 
   useEffect(() => {
-    if (user) {
+    const name = localStorage.getItem("name")
+    if (name) {
       navigate("/auction");
     }
-  }, [user, navigate]);
+  }, [navigate]);
 
   return (
     <section className="py-4 md:py-8">

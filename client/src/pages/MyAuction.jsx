@@ -34,21 +34,21 @@ const MyAuction = () => {
 
   return (
     <div className="min-h-[calc(100svh-9rem)] px-4 py-4 md:flex">
-      <UserProfile name={userData?.name} bids={"6"} />
+      <UserProfile name={userData?.name || "unknown user"} bids={"6"} />
       <div>
         {userProducts && userProducts.length > 0 ? (
-          userProducts.map((auction) => (
+          userProducts?.map((auction) => (
             <Card
-              key={auction._id}
-              auction_id={auction._id}
-              itemName={auction.itemName}
-              itemDescription={auction.itemDescription}
-              itemPrice={auction.itemPrice}
-              itemPostDate={auction.createdAt}
-              itemStartDate={auction.itemStartDate}
-              itemEndDate={auction.itemEndDate}
-              itemPhoto={auction.itemPhoto}
-              sellerName={auction.seller.name}
+              key={auction?._id|| ""}
+              auction_id={auction?._id || ""}
+              itemName={auction?.itemName || ""}
+              itemDescription={auction?.itemDescription || ""}
+              itemPrice={auction?.itemPrice || ""}
+              itemPostDate={auction?.createdAt || ""}
+              itemStartDate={auction?.itemStartDate || ""}
+              itemEndDate={auction?.itemEndDate || ""}
+              itemPhoto={auction?.itemPhoto || "" }
+              sellerName={auction?.seller.name || "unknown user"}
             />
           ))
         ) : (

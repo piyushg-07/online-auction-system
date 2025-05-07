@@ -29,7 +29,8 @@ const handleBidderSignup = async (req, res) => {
 
         return res.status(201).json({ token });
     } catch (error) {
-        console.error("Signup error:", error.message); // Log the error
+        console.error("Signup error:", error.message); 
+        // Log the error
         res.status(500).json({ error: "Internal server error" });
     }
 };

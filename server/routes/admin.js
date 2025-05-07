@@ -1,5 +1,5 @@
 import express from "express";
-import { handleAdminSignup, handleAdminLogin, getAllUsers, getAllProducts, deleteUserAndProducts, deleteProduct, createProduct } from "../controllers/admin.controller.js";
+import { handleAdminSignup, handleAdminLogin, getAllUsers, getAllProducts, deleteUserAndProducts, deleteProduct, createProduct,getAllBiddersWithProposals } from "../controllers/admin.controller.js";
 
 const router = express.Router();
 
@@ -11,6 +11,8 @@ router.post("/login", handleAdminLogin);
 
 // Get all users
 router.get("/users", getAllUsers);
+// Get all users
+router.get("/getAllBiddersWithProposals", getAllBiddersWithProposals);
 
 // Get all products
 router.get("/products", getAllProducts);

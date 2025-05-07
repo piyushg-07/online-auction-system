@@ -4,7 +4,7 @@ const UserProfile = ({ name, bids }) => {
     <div className="bg-white overflow-hidden shadow rounded-lg border max-w-xs md:max-h-72 max-md:mx-auto max-md:my-2 my-2 md:mx-4 md:sticky md:top-20">
       <div className="px-4 py-5 sm:px-6">
         <h3 className="text-lg leading-6 font-medium text-gray-900">
-          User Profile
+          Auditor Profile
         </h3>
         <p className="mt-1 max-w-2xl text-sm text-gray-500">
           Information about the user.

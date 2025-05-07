@@ -20,6 +20,8 @@ import BidderLogin from "./pages/bidder/Login.jsx";
 import BidderSignup from "./pages/bidder/Signup.jsx";
 import ProposalBidder from "./pages/bidder/Proposal.jsx";
 import AllProposal from "./pages/AllProposal.jsx";
+import AdminAndBidderDashboard from "./pages/GovernmentOfficial/AllUsers.jsx";
+import Management from "./pages/GovernmentOfficial/DeleteUserAndProduct.jsx";
 
 const bidderId = localStorage.getItem("bidderId"); // Retrieve bidderId from localStorage
 
@@ -64,6 +66,14 @@ const router = createBrowserRouter([
   {
     path: "/allProposals", 
     element: <AllProposal />,
+  },
+  {
+    path: "/AdminAndBidderDashboard", 
+    element: <AdminAndBidderDashboard />,
+  },
+  {
+    path: "/Management", 
+    element: <Management />,
   },
   {
     path: "/",

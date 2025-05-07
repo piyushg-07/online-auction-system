@@ -1,16 +1,16 @@
 import { IoArrowBackSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+// import { useSelector, useDispatch } from "react-redux";
 import { TbUserSquareRounded } from "react-icons/tb";
 import { FiHome } from "react-icons/fi";
 
 const Login = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { user, errorData } = useSelector((state) => state.auth);
-  const [error, setError] = useState(errorData);
+  // const { user, errorData } = useSelector((state) => state.auth);
+  const [error, setError] = useState("");
   const [formData, setformData] = useState({
     email: "",
     password: "",
@@ -45,6 +45,9 @@ const Login = () => {
 
       // Save token to localStorage
       localStorage.setItem("token", data.token);
+      localStorage.setItem("name", data.admin.name);
+      localStorage.setItem("field", data.admin.field);
+      localStorage.setItem("bidderId", data.admin._id); // Save bidderId
 
       // Navigate to the dashboard or auction page
       navigate("/auction");
@@ -57,10 +60,11 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (user) {
+    const name = localStorage.getItem("name")
+    if (name) {
       navigate("/auction");
     }
-  }, [user, navigate]);
+  }, [navigate]);
 
   return (
     <section className="py-4 md:py-8">

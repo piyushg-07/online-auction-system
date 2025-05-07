@@ -84,7 +84,7 @@ const CreateAuction = () => {
                   htmlFor="itemName"
                   className="mb-3 block text-base font-medium text-[#07074D]"
                 >
-                  Item Name
+                  City Name
                 </label>
                 <input
                   value={formData.itemName}
@@ -275,7 +275,7 @@ const CreateAuction = () => {
           {/* Submit button */}
           <div className="flex justify-end">
             <button
-              className="hover:shadow-form rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none"
+              className="hover:shadow-form hover:bg-blue-900 rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none"
               type="submit"
               disabled={!isValid}
             >

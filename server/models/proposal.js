@@ -4,7 +4,7 @@ const proposalSchema = new mongoose.Schema(
     {
         user_id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "User", // Reference to the User model
+            ref: "Bidder", // Reference to the User model
 
         },
         filename: {

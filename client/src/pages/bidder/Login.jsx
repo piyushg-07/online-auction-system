@@ -46,6 +46,7 @@ const Login = () => {
 
       // Save token to localStorage
       localStorage.setItem("token", data.token);
+      localStorage.setItem("name", data.bidder.name);
       localStorage.setItem("field", data.bidder.field);
       localStorage.setItem("bidderId", data.bidder._id); // Save bidderId
 

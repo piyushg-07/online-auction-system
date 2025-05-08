@@ -11,178 +11,232 @@ dotenv.config();
 
 // Admin signup
 const handleAdminSignup = async (req, res) => {
-    const { name, email, password } = req.body;
-    try {
-        const existingAdmin = await Admin.findOne({ email });
-        if (existingAdmin) {
-            return res.status(409).json({ error: "Admin already exists" });
-        }
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-        const newAdmin = new Admin({ name, email, password: hashedPassword });
-        await newAdmin.save();
-        const token = jwt.sign({ adminId: newAdmin._id, email: newAdmin.email }, process.env.JWT_SECRET, { expiresIn: '14d' });
-        return res.status(201).json({ token });
-    } catch (error) {
-        res.status(500).json({ error: "Internal server error" });
+  const { name, email, password } = req.body;
+  try {
+    const existingAdmin = await Admin.findOne({ email });
+    if (existingAdmin) {
+      return res.status(409).json({ error: "Admin already exists" });
     }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const newAdmin = new Admin({ name, email, password: hashedPassword });
+    await newAdmin.save();
+    const token = jwt.sign(
+      { adminId: newAdmin._id, email: newAdmin.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "14d" }
+    );
+    return res.status(201).json({ token });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 // Admin login
 const handleAdminLogin = async (req, res) => {
-    const { email, password } = req.body;
-    try {
-        const admin = await Admin.findOne({ email });
-        if (!admin) {
-            return res.status(400).json({ error: "Admin doesn't exist." });
-        }
-        const isMatch = await bcrypt.compare(password, admin.password);
-        if (!isMatch) {
-            return res.status(400).json({ error: "Invalid credentials" });
-        }
-        const token = jwt.sign({ adminId: admin._id, email: admin.email }, process.env.JWT_SECRET, { expiresIn: '14d' });
-        return res.status(200).json({ token, admin });
-    } catch (error) {
-        res.status(500).json({ error: "Internal server error" });
+  const { email, password } = req.body;
+  try {
+    const admin = await Admin.findOne({ email });
+    if (!admin) {
+      return res.status(400).json({ error: "Admin doesn't exist." });
     }
+    const isMatch = await bcrypt.compare(password, admin.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
+    const token = jwt.sign(
+      { adminId: admin._id, email: admin.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "14d" }
+    );
+    return res.status(200).json({ token, admin });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 // Get all users
 const getAllUsers = async (req, res) => {
-    try {
-        const users = await User.find({}, { password: 0 }); // Exclude passwords
-        return res.status(200).json(users);
-    } catch (error) {
-        res.status(500).json({ error: "Internal server error" });
-    }
+  try {
+    const users = await User.find({}, { password: 0 }); // Exclude passwords
+    return res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
-
-
 
 // Get all products
 const getAllBiddersWithProposals = async (req, res) => {
-    try {
-        // 1. Get all bidders (excluding password) as plain JS objects
-        const bidders = await Bidder.find({}, { password: 0 }).lean();
+  try {
+    // 1. Get all bidders (excluding password) as plain JS objects
+    const bidders = await Bidder.find({}, { password: 0 }).lean();
 
-        // 2. Get all proposals and populate user info (bidder name & email)
-        const proposals = await Proposal.find({})
-            .populate('user_id', 'name email') // optional: brings bidder name/email into each proposal
-            .lean();
+    // 2. Get all proposals and populate user info (bidder name & email)
+    const proposals = await Proposal.find({})
+      .populate("user_id", "name email") // optional: brings bidder name/email into each proposal
+      .lean();
 
-        // 3. Group proposals by user_id (string)
-        const proposalMap = proposals.reduce((acc, proposal) => {
-            const userId = proposal.user_id?._id?.toString();
-            if (userId) {
-                if (!acc[userId]) acc[userId] = [];
-                acc[userId].push(proposal);
-            }
-            return acc;
-        }, {});
+    // 3. Group proposals by user_id (string)
+    const proposalMap = proposals.reduce((acc, proposal) => {
+      const userId = proposal.user_id?._id?.toString();
+      if (userId) {
+        if (!acc[userId]) acc[userId] = [];
+        acc[userId].push(proposal);
+      }
+      return acc;
+    }, {});
 
-        // 4. Attach proposals to each bidder
-        const result = bidders.map(bidder => ({
-            ...bidder,
-            proposals: proposalMap[bidder._id.toString()] || []
-        }));
+    // 4. Attach proposals to each bidder
+    const result = bidders.map((bidder) => ({
+      ...bidder,
+      proposals: proposalMap[bidder._id.toString()] || [],
+    }));
 
-        // 5. Send response
-        res.status(200).json(result);
-    } catch (error) {
-        console.error('Error fetching bidders with proposals:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
+    // 5. Send response
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error fetching bidders with proposals:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
-
-
 
 // Get all products
 const getAllProducts = async (req, res) => {
-    try {
-        const products = await Product.find().populate('seller', 'name email').populate('bids.bidder', 'name email');
-        return res.status(200).json(products);
-    } catch (error) {
-        res.status(500).json({ error: "Internal server error" });
-    }
+  try {
+    const products = await Product.find()
+      .populate("seller", "name email")
+      .populate("bids.bidder", "name email");
+    return res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
-
 
 // Delete a user and their associated products
 const deleteUserAndProducts = async (req, res) => {
-    const { userId } = req.body;
+  const { userId } = req.body;
 
-    try {
-        // Find the user
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ error: "User not found" });
-        }
-
-        // Delete all products associated with the user
-        await Product.deleteMany({ seller: userId });
-
-        // Delete the user
-        await User.findByIdAndDelete(userId);
-
-        return res.status(200).json({ message: "User and their products have been deleted successfully" });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Internal server error" });
+  try {
+    // Find the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
     }
+
+    // Delete all products associated with the user
+    await Product.deleteMany({ seller: userId });
+
+    // Delete the user
+    await User.findByIdAndDelete(userId);
+
+    return res
+      .status(200)
+      .json({
+        message: "User and their products have been deleted successfully",
+      });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 // Delete a product by its ID
 const deleteProduct = async (req, res) => {
-    const { productId } = req.body;
+  const { productId } = req.body;
 
-    try {
-        // Find the product
-        const product = await Product.findById(productId);
-        if (!product) {
-            return res.status(404).json({ error: "Product not found" });
-        }
-
-        // Delete the product
-        await Product.findByIdAndDelete(productId);
-
-        return res.status(200).json({ message: "Product has been deleted successfully" });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Internal server error" });
+  try {
+    // Find the product
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
     }
+
+    // Delete the product
+    await Product.findByIdAndDelete(productId);
+
+    return res
+      .status(200)
+      .json({ message: "Product has been deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 // Admin creates a product
 const createProduct = async (req, res) => {
-    const { itemName, itemDescription, itemPrice, itemCategory, itemPhoto, itemStartDate, itemEndDate, sellerId } = req.body;
+  const {
+    itemName,
+    itemDescription,
+    itemPrice,
+    itemCategory,
+    itemPhoto,
+    itemStartDate,
+    itemEndDate,
+    sellerId,
+  } = req.body;
 
-    try {
-        // Validate seller existence
-        const seller = await User.findById(sellerId);
-        if (!seller) {
-            return res.status(404).json({ error: "Seller not found" });
-        }
-
-        // Create a new product
-        const newProduct = new Product({
-            itemName,
-            itemDescription,
-            itemPrice,
-            itemCategory,
-            itemPhoto,
-            itemStartDate,
-            itemEndDate,
-            seller: sellerId,
-        });
-
-        // Save the product to the database
-        await newProduct.save();
-
-        return res.status(201).json({ message: "Product created successfully", product: newProduct });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Internal server error" });
+  try {
+    // Validate seller existence
+    const seller = await User.findById(sellerId);
+    if (!seller) {
+      return res.status(404).json({ error: "Seller not found" });
     }
+
+    // Create a new product
+    const newProduct = new Product({
+      itemName,
+      itemDescription,
+      itemPrice,
+      itemCategory,
+      itemPhoto,
+      itemStartDate,
+      itemEndDate,
+      seller: sellerId,
+    });
+
+    // Save the product to the database
+    await newProduct.save();
+
+    return res
+      .status(201)
+      .json({ message: "Product created successfully", product: newProduct });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
-export {handleAdminSignup, handleAdminLogin, getAllUsers, getAllProducts, deleteUserAndProducts, deleteProduct,createProduct,getAllBiddersWithProposals };
+const deleteBidder = async (req, res) => {
+  const { bidderId } = req.body;
+
+  try {
+    // Find the bidder
+    const bidder = await Bidder.findById(bidderId);
+    if (!bidder) {
+      return res.status(404).json({ error: "Bidder not found" });
+    }
+
+    // Delete the bidder
+    await Bidder.findByIdAndDelete(bidderId);
+
+    return res
+      .status(200)
+      .json({ message: "Bidder has been deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export {
+  handleAdminSignup,
+  handleAdminLogin,
+  getAllUsers,
+  getAllProducts,
+  deleteUserAndProducts,
+  deleteProduct,
+  createProduct,
+  getAllBiddersWithProposals,
+  deleteBidder,
+};

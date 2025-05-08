@@ -1,5 +1,15 @@
 import express from "express";
-import { handleAdminSignup, handleAdminLogin, getAllUsers, getAllProducts, deleteUserAndProducts, deleteProduct, createProduct,getAllBiddersWithProposals } from "../controllers/admin.controller.js";
+import {
+  handleAdminSignup,
+  handleAdminLogin,
+  getAllUsers,
+  getAllProducts,
+  deleteUserAndProducts,
+  deleteProduct,
+  createProduct,
+  getAllBiddersWithProposals,
+  deleteBidder,
+} from "../controllers/admin.controller.js";
 
 const router = express.Router();
 
@@ -18,10 +28,11 @@ router.get("/getAllBiddersWithProposals", getAllBiddersWithProposals);
 router.get("/products", getAllProducts);
 
 // Delete a user and their products
-router.delete("/user", deleteUserAndProducts);
+router.delete("/delete-user", deleteUserAndProducts);
 
 // Delete a product
-router.delete("/product", deleteProduct);
+router.delete("/delete-product", deleteProduct);
+router.post("/delete-bidder", deleteBidder);
 
 // Create a product
 router.post("/product", createProduct);

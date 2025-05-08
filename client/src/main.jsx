@@ -22,6 +22,7 @@ import ProposalBidder from "./pages/bidder/Proposal.jsx";
 import AllProposal from "./pages/AllProposal.jsx";
 import AdminAndBidderDashboard from "./pages/GovernmentOfficial/AllUsers.jsx";
 import Management from "./pages/GovernmentOfficial/DeleteUserAndProduct.jsx";
+import BidderProfile from "./pages/bidder/BidderProfile.jsx";
 
 const bidderId = localStorage.getItem("bidderId"); // Retrieve bidderId from localStorage
 
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <Landing />,
     errorElement: <Error />,
+  },
+  {
+    path: "/bidder/profile",
+    element: <BidderProfile />,
   },
   {
     path: "/login",
@@ -64,15 +69,15 @@ const router = createBrowserRouter([
     element: <ProposalBidder />,
   },
   {
-    path: "/allProposals", 
+    path: "/allProposals",
     element: <AllProposal />,
   },
   {
-    path: "/AdminAndBidderDashboard", 
+    path: "/AdminAndBidderDashboard",
     element: <AdminAndBidderDashboard />,
   },
   {
-    path: "/Management", 
+    path: "/Management",
     element: <Management />,
   },
   {

@@ -18,22 +18,24 @@ const Navbar = () => {
   const navMenu = [
     { title: "Home", url: "/auction" },
     ...(field === "bidder"
-      ? [{ title: "Proposal", url: "/proposal" }]
-      : []), // Only include "Proposal" if the field 
-      ...((field !== "bidder" || !field)
+      ? [
+          { title: "Proposal", url: "/proposal" },
+          { title: "Profile", url: "/bidder/profile" },
+        ]
+      : []), // Only include "Proposal" if the field
+    ...(field !== "bidder" || !field
       ? [
           { title: "My Auction", url: `/auction/user/${user.userId}` },
           { title: "Create Auction", url: "/create-auction" },
           { title: "All Proposals", url: "/allProposals" },
         ]
-      : []),  
-      ...(field === "GovernmentOfficial"
-        ? [
-            { title: "All Registers", url: `/AdminAndBidderDashboard` },
-            { title: "Management", url: "/Management" },
-            
-          ]
-        : []),  
+      : []),
+    ...(field === "GovernmentOfficial"
+      ? [
+          { title: "All Registers", url: `/AdminAndBidderDashboard` },
+          { title: "Management", url: "/Management" },
+        ]
+      : []),
     { title: "Accounts", url: "#" },
   ];
 
@@ -56,7 +58,7 @@ const Navbar = () => {
 
   // User logout
   const handleLogout = () => {
-    localStorage.clear()
+    localStorage.clear();
     dispatch(logout());
     navigate("/home");
   };

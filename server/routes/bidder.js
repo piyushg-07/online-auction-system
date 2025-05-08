@@ -1,5 +1,13 @@
 import express from "express";
-import { handleBidderSignup, handleBidderLogin, placeBid, getBidderProfile, updateBidderProfile, getBidderBids } from "../controllers/bidder.controller.js";
+import {
+  handleBidderSignup,
+  handleBidderLogin,
+  placeBid,
+  getBidderProfile,
+  updateBidderProfile,
+  getBidderBids,
+} from "../controllers/bidder.controller.js";
+import bidderAuth from "../middleware/bidderAuth.js";
 
 const router = express.Router();
 
@@ -12,11 +20,8 @@ router.post("/login", handleBidderLogin);
 // Place a bid
 router.post("/bid", placeBid);
 
-// Get bidder profile
-router.get("/profile", getBidderProfile);
-
-// Update bidder profile
-router.put("/updateprofile", updateBidderProfile);
+router.get("/profile", bidderAuth, getBidderProfile);
+router.put("/updateprofile", bidderAuth, updateBidderProfile);
 
 // Get all bids placed by the bidder
 router.get("/getbids", getBidderBids);

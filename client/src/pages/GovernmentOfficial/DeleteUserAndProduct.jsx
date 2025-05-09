@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import Navbar from "../../components/Navbar"
 
 const DeleteUserAndProduct = () => {
   const [userId, setUserId] = useState("");
@@ -61,8 +62,9 @@ const DeleteUserAndProduct = () => {
   };
 
   return (
-    <div className="container mx-auto p-8 bg-white shadow-lg rounded-lg space-y-8">
-      <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
+    <div className="w-full  text-white p-4 shadow-md">
+      <Navbar/>
+      <h2 className="text-3xl font-bold text-center text-gray-800 mb-8 mt-20">
         Admin Delete Actions
       </h2>
 

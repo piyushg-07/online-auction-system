@@ -15,6 +15,29 @@ const Navbar = () => {
 
   const field = localStorage.getItem("field");
 
+  // const navMenu = [
+  //   { title: "Home", url: "/auction" },
+  //   ...(field === "bidder"
+  //     ? [
+  //         { title: "Proposal", url: "/proposal" },
+  //         { title: "Profile", url: "/bidder/profile" },
+  //       ]
+  //     : []), // Only include "Proposal" if the field
+  //   ...(field !== "bidder" || !field
+  //     ? [
+  //         { title: "My Auction", url: `/auction/user/${user.userId}` },
+  //         { title: "Create Auction", url: "/create-auction" },
+  //         { title: "All Proposals", url: "/allProposals" },
+  //       ]
+  //     : []),
+  //   ...(field === "GovernmentOfficial"
+  //     ? [
+  //         { title: "All Registers", url: `/AdminAndBidderDashboard` },
+  //         { title: "Management", url: "/Management" },
+  //       ]
+  //     : []),
+  //   { title: "Accounts", url: "#" },
+  // ];
   const navMenu = [
     { title: "Home", url: "/auction" },
     ...(field === "bidder"
@@ -23,12 +46,21 @@ const Navbar = () => {
           { title: "Profile", url: "/bidder/profile" },
         ]
       : []), // Only include "Proposal" if the field
-    ...(field !== "bidder" || !field
+    ...(field !== "bidder" && field !== "GovernmentOfficial"
       ? [
-          { title: "My Auction", url: `/auction/user/${user.userId}` },
-          { title: "Create Auction", url: "/create-auction" },
-          { title: "All Proposals", url: "/allProposals" },
+          { title: "My Contracts", url: `/auction/user/${user.userId}` },
+          { title: "Create Contracts", url: "/create-auction" },
         ]
+      : []),
+    // ...((field !== "bidder" || !field)
+    // ? [
+    //     { title: "My Auction", url: `/auction/user/${user.userId}` },
+    //     { title: "Create Auction", url: "/create-auction" },
+    //     { title: "All Proposals", url: "/allProposals" },
+    //   ]
+    // : []),
+    ...(field !== "bidder" || field === "GovernmentOfficial"
+      ? [{ title: "All Proposals", url: "/allProposals" }]
       : []),
     ...(field === "GovernmentOfficial"
       ? [
@@ -93,7 +125,7 @@ const Navbar = () => {
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
           <span className="self-center text-2xl font-semibold whitespace-nowrap ">
-            Government Road Contracting System
+            RoadChain
           </span>
         </Link>
         <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">

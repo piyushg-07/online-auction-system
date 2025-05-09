@@ -2,9 +2,9 @@
 REM =====================================
 REM Change these paths to match your project structure.
 set VENV_PATH=C:\Users\user\OneDrive\Desktop\test\working\online-auction-system\QuotationAnalysis\venv
-set FLASK_APP_DIR=C:\Users\user\OneDrive\Desktop\test\working\online-auction-system\QuotationAnalysis
-set REACT_APP_DIR=C:\Users\user\OneDrive\Desktop\test\working\online-auction-system\client
-set NODE_APP_DIR=C:\Users\user\OneDrive\Desktop\test\working\online-auction-system\server
+set FLASK_APP_DIR=C:\Users\user\OneDrive\Desktop\test\working2\online-auction-system\QuotationAnalysis
+set REACT_APP_DIR=C:\Users\user\OneDrive\Desktop\test\working2\online-auction-system\client
+set NODE_APP_DIR=C:\Users\user\OneDrive\Desktop\test\working2\online-auction-system\server
 REM =====================================
 C:\Users\user\OneDrive\Desktop\test\working\online-auction-system\client
 REM ---------- Function to check and create venv ----------

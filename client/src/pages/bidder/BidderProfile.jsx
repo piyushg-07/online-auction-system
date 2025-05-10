@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
+import { useNavigate } from "react-router-dom";
+import Footer from "../../components/Footer";
 
 const BidderProfile = () => {
   const [bidder, setBidder] = useState(null);
@@ -8,10 +9,9 @@ const BidderProfile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const navigate = useNavigate(); // Initialize navigate for back button
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  // Fetch bidder profile on component mount or when token changes
   useEffect(() => {
     console.log("useEffect triggered, fetching bidder profile...");
 
@@ -112,57 +112,72 @@ const BidderProfile = () => {
   console.log("Rendering profile with bidder data:", bidder);
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-6 bg-white shadow rounded-lg space-y-6">
-      {/* Back Button */}
-      <button
-        onClick={() => navigate(-1)} // Go back to the previous page
-        className="text-blue-600 hover:underline text-sm mb-4"
-      >
-        ← Back
-      </button>
-
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-800">Bidder Profile</h2>
+    <div>
+      <div className="max-w-2xl mx-auto mt-10 p-6 bg-white shadow rounded-lg space-y-6">
+        {/* Back Button */}
         <button
-          onClick={() => {
-            console.log("Toggling edit mode...");
-            setEditMode(!editMode);
-          }}
-          className="text-sm text-blue-600 hover:underline"
+          onClick={() => navigate(-1)}
+          className="text-blue-600 hover:underline text-sm mb-4"
         >
-          {editMode ? "Cancel" : "Edit"}
+          ← Back
         </button>
-      </div>
 
-      {["name", "phone", "address", "location", "city", "state"].map(
-        (field) => (
-          <div key={field}>
-            <label className="block text-gray-600 capitalize">{field}</label>
-            {editMode ? (
-              <input
-                type="text"
-                name={field}
-                value={formData[field] || ""}
-                onChange={handleChange}
-                className="w-full mt-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-              />
-            ) : (
-              <p className="mt-1 text-gray-900">{bidder[field] || "—"}</p>
-            )}
-          </div>
-        )
-      )}
+        {/* Profile Image */}
+        <div className="flex justify-center">
+          <img
+            src="https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659652_1280.png"
+            alt="Profile"
+            className="w-24 h-24 rounded-full object-cover border border-gray-300"
+          />
+        </div>
 
-      {editMode && (
-        <div className="pt-4">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-bold text-gray-800">Bidder Profile</h2>
           <button
-            onClick={handleSave}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            onClick={() => {
+              console.log("Toggling edit mode...");
+              setEditMode(!editMode);
+            }}
+            className="text-sm text-blue-600 hover:underline"
           >
-            Save Changes
+            {editMode ? "Cancel" : "Edit"}
           </button>
         </div>
-      )}
+
+        {["name", "phone", "address", "location", "city", "state"].map(
+          (field) => (
+            <div key={field}>
+              <label className="block text-gray-600 capitalize">{field}</label>
+              {editMode ? (
+                <input
+                  type="text"
+                  name={field}
+                  value={formData[field] || ""}
+                  onChange={handleChange}
+                  className="w-full mt-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                />
+              ) : (
+                <p className="mt-1 text-gray-900">{bidder[field] || "—"}</p>
+              )}
+            </div>
+          )
+        )}
+
+        {editMode && (
+          <div className="pt-4">
+            <button
+              onClick={handleSave}
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+              Save Changes
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div className="mt-6 w-full">
+        <Footer />
+      </div>
     </div>
   );
 };
